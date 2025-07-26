@@ -9,6 +9,7 @@ import { CartContext } from "../../context/Cart.context";
 import { WishlistContext } from "../../context/Wishlist.context";
 import { faHeart as regularHeart } from "@fortawesome/free-regular-svg-icons";
 import { faHeart as solidHeart } from "@fortawesome/free-solid-svg-icons";
+import { AuthContext } from "../../context/Auth.context";
 
 export default function ProductCard({ productInfo }) {
   const {
@@ -22,7 +23,7 @@ export default function ProductCard({ productInfo }) {
     category,
   } = productInfo;
   const [isInWishlist, setIsInWishlist] = useState(false);
-
+  const { token } = useContext(AuthContext);
   const { handleAddingProductToCart } = useContext(CartContext);
   const {
     wishlist,
@@ -45,7 +46,6 @@ export default function ProductCard({ productInfo }) {
   };
 
   useEffect(() => {
-    // تحقق إذا المنتج موجود في قائمة المفضلة
     const isInList = wishlist?.some((item) => item._id === _id);
     setIsInWishlist(isInList);
   }, [wishlist, _id]);
@@ -96,12 +96,14 @@ export default function ProductCard({ productInfo }) {
           </div>
         </div>
         <div className="action *:text-gray-500 *:hover:text-primary-600 *:transition-colors *:duration-200 flex flex-col gap-4 top-4 right-2 absolute ">
-          <button onClick={toggleWishlist} className="wishlist-btn">
-            <FontAwesomeIcon
-              icon={isInWishlist ? solidHeart : regularHeart}
-              style={{ color: isInWishlist ? "red" : "gray" }}
-            />
-          </button>
+          {token && (
+            <button onClick={toggleWishlist} className="wishlist-btn">
+              <FontAwesomeIcon
+                icon={isInWishlist ? solidHeart : regularHeart}
+                style={{ color: isInWishlist ? "red" : "gray" }}
+              />
+            </button>
+          )}
 
           <button>
             <FontAwesomeIcon icon={faCodeCompare} />

@@ -18,6 +18,7 @@ export default function WishlistItem() {
     handleAddAllToCart,
   } = useContext(WishlistContext);
   const wishlistCount = wishlist?.length || 0;
+  if (isLoading) return <Loading />;
 
   const { handleAddingProductToCart } = useContext(CartContext);
   const handleAddToCartAndRemove = async (id) => {
@@ -32,7 +33,6 @@ export default function WishlistItem() {
     }
   };
 
-  if (isLoading) return <Loading />;
   if (isError)
     return (
       <p className="text-center text-red-500">
