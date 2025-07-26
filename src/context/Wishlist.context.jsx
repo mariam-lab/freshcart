@@ -111,7 +111,9 @@ export function WishlistProvider({ children }) {
   }
 
   useEffect(() => {
-    fetchWishlist();
+    if (token) {
+      fetchWishlist();
+    }
   }, []);
   useEffect(() => {
     if (token) {
