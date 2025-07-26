@@ -9,6 +9,7 @@ import withReactContent from "sweetalert2-react-content";
 import { toast } from "react-toastify";
 import { useContext } from "react";
 import { CartContext } from "./Cart.context";
+import { AuthContext } from "./Auth.context";
 
 export const WishlistContext = createContext(null);
 const MySwal = withReactContent(Swal);
@@ -19,6 +20,7 @@ export function WishlistProvider({ children }) {
   const [isLoading, setIsLoading] = useState(true);
   const [isError, setIsError] = useState(false);
   const [error, setError] = useState(null);
+  const { token } = useContext(AuthContext);
 
   async function fetchWishlist() {
     try {
@@ -41,7 +43,7 @@ export function WishlistProvider({ children }) {
       setIsLoading(true);
       const response = await addProductToWishlist({ id });
       if (response.success) {
-        await fetchWishlist(); // ← هذا يحافظ على تنسيق البيانات
+        await fetchWishlist();
         if (!silent) toast.success(response.data.message);
       }
     } catch (error) {
@@ -111,7 +113,13 @@ export function WishlistProvider({ children }) {
   useEffect(() => {
     fetchWishlist();
   }, []);
-
+  useEffect(() => {
+    if (token) {
+      fetchWishlist();
+    } else {
+      setWishlist(null); // Clear wishlist on logout
+    }
+  }, [token]); // Watch for token changes
   return (
     <WishlistContext.Provider
       value={{
