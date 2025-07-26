@@ -5,7 +5,6 @@ export default function WishList() {
   return (
     <>
       <WishlistItem />
-      <CategoryProducts categoryName="Women's Fashion" />
     </>
   );
 }
